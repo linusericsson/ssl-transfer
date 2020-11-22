@@ -46,14 +46,13 @@ Below are links to the pre-trained weights used.
 ## Datasets
 There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository.
 ```
-.
-+-- data
-|   +-- CIFAR10
-|   +-- DTD
-|   +-- ...
-+-- ssl-transfer
-|   +-- readme.md
-|   +-- ...
+data
+    CIFAR10
+    DTD
+    ...
+ssl-transfer
+    readme.md
+    ...
 ```
 
 ## Many-shot evaluation
