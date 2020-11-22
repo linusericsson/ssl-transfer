@@ -22,14 +22,6 @@ MODELS = {
 }
 
 
-import torch
-import torch.nn as nn
-from torchvision import models
-import haiku, jax
-
-import pickle
-from pprint import pprint
-
 def convert_byol(tf_path, pth_path):
     byol = pickle.load(open(tf_path, 'rb'))
 
@@ -38,8 +30,6 @@ def convert_byol(tf_path, pth_path):
     conv_layers_tf = [value for (key, value) in tf_params_dict.items() if 'conv' in key]
     bn_layers_tf = [value for (key, value) in tf_params_dict.items() if 'batchnorm' in key]
     bn_ema_tf = [value for (key, value) in tf_state_dict.items() if 'batchnorm' in key]
-
-    pprint(list(tf_state_dict.keys()))
 
     model = models.resnet50()
     conv_layers_pt = [m for m in list(model.modules()) if type(m) is nn.Conv2d]
@@ -179,6 +169,7 @@ def download_pretrained_models(pretrained_models_path='models'):
                 subprocess.run(['wget', url, '-O', dst])
             else:
                 print(f'Found {model_name} at {dst}')
+
 
 if __name__ == '__main__':
     print('Warning, SimCLR-v1 and SimCLR-v2 models need to be downloaded manually and converted into PyTorch format. See readme.md for details.')
