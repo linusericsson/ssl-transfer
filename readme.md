@@ -15,7 +15,7 @@ sklearn=0.22.2
 ```
 
 ## Pre-trained models
-In the paper we evaluate 14 pretrained ResNet50 models, 13 self-supervised and 1 supervised.
+In the paper we evaluate 14 pre-trained ResNet50 models, 13 self-supervised and 1 supervised.
 To download and prepare all models in the same format, run:
 ```
 python download_and_prepare_models.py

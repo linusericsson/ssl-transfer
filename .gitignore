@@ -1,4 +1,4 @@
-models/
-.ipynb_checkpoints/
+**/*.pth
+**/*.pkl
 **/*.pyc
-
+.ipynb_checkpoints/
