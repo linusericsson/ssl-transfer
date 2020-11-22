@@ -21,27 +21,26 @@ python download_and_prepare_models.py
 ```
 This will prepare the models in the same format and save them in the `models` directory.
 
-**Note**: For SimCLR-v1 and SimCLR-v2, the TensorFlow checkpoints need to be downloaded manually converted into PyTorch format using https://github.com/tonylins/simclr-converter and https://github.com/Separius/SimCLRv2-Pytorch, respectively.
+**Note**: For SimCLR-v1 and SimCLR-v2, the TensorFlow checkpoints need to be downloaded manually (using the links in the table below) and converted into PyTorch format (using https://github.com/tonylins/simclr-converter and https://github.com/Separius/SimCLRv2-Pytorch, respectively).
 
 Below are links to the pre-trained weights used.
 
 | Model | URL |
 |-------|-----|
-| insdis | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AACcsSIt1_Njv7GsmsuzZ6Sta/InsDis.pth |
-| moco-v1 | https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v1_200ep/moco_v1_200ep_pretrain.pth.tar |
-| pcl-v1 | https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v1_epoch200.pth.tar |
-| pirl | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AADN4jKnvTI0U5oT6hTmQZz8a/PIRL.pth |
-| pcl-v2 | https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar |
-| simclr-v1 | https://storage.cloud.google.com/simclr-gcs/checkpoints/ResNet50_1x.zip |
-| moco-v2 | https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar |
-| simclr-v2 | https://console.cloud.google.com/storage/browser/simclr-checkpoints/simclrv2/pretrained/r50_1x_sk0 |
-| sela-v2 | https://dl.fbaipublicfiles.com/deepcluster/selav2_400ep_pretrain.pth.tar |
-| infomin | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AAAzMTynP3Qc8mIE4XWkgILUa/InfoMin_800.pth |
-| byol | https://storage.googleapis.com/deepmind-byol/checkpoints/pretrain_res50x1.pkl |
-| deepcluster-v2 | https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar |
-| swav | https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar |
-|-------|----|
-| supervised | We use weights from `torchvision.models.resnet50(pretrained=True)` |
+| InsDis | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AACcsSIt1_Njv7GsmsuzZ6Sta/InsDis.pth |
+| MoCo-v1 | https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v1_200ep/moco_v1_200ep_pretrain.pth.tar |
+| PCL-v1 | https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v1_epoch200.pth.tar |
+| PIRL | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AADN4jKnvTI0U5oT6hTmQZz8a/PIRL.pth |
+| PCL-v2 | https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar |
+| SimCLR-v1 | https://storage.cloud.google.com/simclr-gcs/checkpoints/ResNet50_1x.zip |
+| MoCo-v2 | https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar |
+| SimCLR-v2 | https://console.cloud.google.com/storage/browser/simclr-checkpoints/simclrv2/pretrained/r50_1x_sk0 |
+| SeLa-v2 | https://dl.fbaipublicfiles.com/deepcluster/selav2_400ep_pretrain.pth.tar |
+| InfoMin | https://www.dropbox.com/sh/87d24jqsl6ra7t2/AAAzMTynP3Qc8mIE4XWkgILUa/InfoMin_800.pth |
+| BYOL | https://storage.googleapis.com/deepmind-byol/checkpoints/pretrain_res50x1.pkl |
+| DeepCluster-v2 | https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar |
+| SwAV | https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar |
+| Supervised | We use weights from `torchvision.models.resnet50(pretrained=True)` |
 
 ## Many-shot evaluation
 We provide the bare essentials of our evaluation in `essential_eval.py`.
