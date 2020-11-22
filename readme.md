@@ -20,7 +20,7 @@ To download and prepare all models in the same format, run:
 ```
 python download_and_prepare_models.py
 ```
-This will prepare the models in the same format and save them in the `models` directory.
+This will prepare the models in the same format and save them in a directory named `models`.
 
 **Note**: For SimCLR-v1 and SimCLR-v2, the TensorFlow checkpoints need to be downloaded manually (using the links in the table below) and converted into PyTorch format (using https://github.com/tonylins/simclr-converter and https://github.com/Separius/SimCLRv2-Pytorch, respectively).
 
