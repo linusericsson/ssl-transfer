@@ -44,13 +44,15 @@ Below are links to the pre-trained weights used.
 | Supervised | We use weights from `torchvision.models.resnet50(pretrained=True)` |
 
 ## Datasets
-There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository.
+There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository. Below is an outline of the expected file structure:
 ```
-data
-    CIFAR10
-    DTD
+data/
+    CIFAR10/
+    DTD/
     ...
-ssl-transfer
+ssl-transfer/
+    datasets/
+    models/
     readme.md
     ...
 ```
