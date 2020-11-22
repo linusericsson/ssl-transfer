@@ -9,6 +9,7 @@ torch=1.2.0
 torchvision=0.4.0
 PIL=7.1.2
 numpy=1.18.1
+pandas=1.0.3
 tqdm=4.31.1
 sklearn=0.22.2
 ```
@@ -42,17 +43,43 @@ Below are links to the pre-trained weights used.
 | SwAV | https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar |
 | Supervised | We use weights from `torchvision.models.resnet50(pretrained=True)` |
 
-## Many-shot evaluation
-We provide the bare essentials of our evaluation in `essential_eval.py`.
+## Datasets
+There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository.
+.
++-- data
+|   +-- CIFAR10
+|   +-- DTD
+|   +-- ...
++-- ssl-transfer
+|   +-- readme.md
+|   +-- ...
 
-To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter run:
+## Many-shot evaluation
+We provide the code for our many-shot evaluation in `many_shot_eval.py`.
+
+To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter, run:
 ```
-python essential_eval.py --dataset cifar10 --model deepcluster-v2 --C 0.1
+python many_shot_eval.py --dataset cifar10 --model deepcluster-v2 --C 0.1
 ```
 The test accuracy should be close to 94.07%, the value reported in Table 1 of the paper.
 
 To evaluate the Supervised baseline, run:
 ```
-python essential_eval.py --dataset cifar10 --model supervised --C 0.056
+python many_shot_eval.py --dataset cifar10 --model supervised --C 0.056
 ```
-This model should achieve close to  91.47%.
+This model should achieve close to 91.47%.
+
+## Few-shot evaluation
+We provide the code for our few-shot evaluation in `few_shot_eval.py`.
+
+To evaluate DeepCluster-v2 on EuroSAT in a 5-way 5-shot setup, run:
+```
+python few_shot_eval.py --dataset eurosat --model deepcluster-v2 --n-way 5 --n-support 5
+```
+The test accuracy should be close to 88.39% ± 0.49%, the value reported in Table 2 of the paper.
+
+Or, to evaluate the Supervised baseline on ChestX in a 5-way 50-shot setup, run:
+```
+python few_shot_eval.py --dataset chestx --model supervised --n-way 5 --n-support 50
+```
+This model should achieve close to 32.34% ± 0.45%.

@@ -113,7 +113,7 @@ class LinearTester():
         return self.classifier.fit_logistic_regression(X_trainval_feature, y_trainval, X_test_feature, y_test)
 
 
-class LoadedResNet(nn.Module):
+class ResNetBackbone(nn.Module):
     def __init__(self, model_name):
         super().__init__()
         self.model_name = model_name
@@ -132,7 +132,6 @@ class LoadedResNet(nn.Module):
         print("num parameters:", sum(p.numel() for p in self.model.parameters()))
 
     def forward(self, x):
-        # See note [TorchScript super()]
         x = self.model.conv1(x)
         x = self.model.bn1(x)
         x = self.model.relu(x)
@@ -147,10 +146,6 @@ class LoadedResNet(nn.Module):
         x = torch.flatten(x, 1)
 
         return x
-
-def load_pretrained_model(model_name):
-    model = LoadedResNet(model_name)
-    return model
 
 
 # Data classes and functions
@@ -292,37 +287,16 @@ def get_test_loader(dset,
     return data_loader
 
 def prepare_data(dset, data_dir, batch_size, image_size, normalisation):
-    if normalisation == 'imagenet':
+    if normalisation:
         normalise_dict = {'mean': [0.485, 0.456, 0.406], 'std': [0.229, 0.224, 0.225]}
-    elif normalisation == 'none':
-        normalise_dict = {'mean': [0.0, 0.0, 0.0], 'std': [1.0, 1.0, 1.0]}
     else:
-        raise ValueError
+        normalise_dict = {'mean': [0.0, 0.0, 0.0], 'std': [1.0, 1.0, 1.0]}
     train_loader, val_loader, trainval_loader = get_train_valid_loader(dset, data_dir, normalise_dict,
                                                 batch_size, image_size, random_seed=0)
     test_loader = get_test_loader(dset, data_dir, normalise_dict, batch_size, image_size)
 
     return train_loader, val_loader, trainval_loader, test_loader
 
-
-# name: {url, format}
-MODELS = {
-    'insdis': ['https://www.dropbox.com/sh/87d24jqsl6ra7t2/AACcsSIt1_Njv7GsmsuzZ6Sta/InsDis.pth', 'pth'],
-    'moco-v1': ['https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v1_200ep/moco_v1_200ep_pretrain.pth.tar', 'pth'],
-    'pcl-v1': ['https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v1_epoch200.pth.tar', 'pth'],
-    'pirl': ['https://www.dropbox.com/sh/87d24jqsl6ra7t2/AADN4jKnvTI0U5oT6hTmQZz8a/PIRL.pth', 'pth'],
-    'pcl-v2': ['https://storage.googleapis.com/sfr-pcl-data-research/PCL_checkpoint/PCL_v2_epoch200.pth.tar', 'pth'],
-    'simclr-v1': ['', ''],
-    'moco-v2': ['https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar', 'pth'],
-    'simclr-v2': ['', ''],
-    'sela-v2': ['https://dl.fbaipublicfiles.com/deepcluster/selav2_400ep_pretrain.pth.tar', 'pth'],
-    'infomin': ['https://www.dropbox.com/sh/87d24jqsl6ra7t2/AAAzMTynP3Qc8mIE4XWkgILUa/InfoMin_800.pth', 'pth'],
-    'byol': ['https://storage.googleapis.com/deepmind-byol/checkpoints/pretrain_res50x1.pkl', 'pkl'],
-    'deepcluster-v2': ['https://dl.fbaipublicfiles.com/deepcluster/deepclusterv2_800ep_pretrain.pth.tar', 'pth'],
-    'swav': ['https://dl.fbaipublicfiles.com/deepcluster/swav_800ep_pretrain.pth.tar', 'pth'],
-    'supervised-simclr': ['', ''],
-    'supervised': ['', ''],
-}
 
 # name: {class, root, num_classes, metric}
 MANY_SHOT_DATASETS = {
@@ -332,7 +306,7 @@ MANY_SHOT_DATASETS = {
 
 # Main code
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Evaluate pretrained self-supervised model with logistic regression.')
+    parser = argparse.ArgumentParser(description='Evaluate pretrained self-supervised model on many-shot recognition.')
     parser.add_argument('-m', '--model', type=str, default='deepcluster-v2',
                         help='name of the pretrained model to load and evaluate (deepcluster-v2 | supervised)')
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', help='name of the dataset to evaluate on')
@@ -340,9 +314,11 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--image-size', type=int, default=224, help='the size of the input images')
     parser.add_argument('-w', '--wd-values', type=int, default=45, help='the number of weight decay values to validate')
     parser.add_argument('-c', '--C', type=float, default=None, help='sklearn C value (1 / weight_decay), if not tuning on validation set')
-    parser.add_argument('-n', '--norm', type=str, default='imagenet', help='data normalisation (none | imagenet)')
+    parser.add_argument('-n', '--no-norm', action='store_true', default=False,
+                        help='whether to turn off data normalisation (based on ImageNet values)')
     parser.add_argument('--device', type=str, default='cuda', help='CUDA or CPU training (cuda | cpu)')
     args = parser.parse_args()
+    args.norm = not args.no_norm
     pprint(args)
 
     # load dataset - this file only supports CIFAR10/CIFAR100
@@ -352,7 +328,7 @@ if __name__ == "__main__":
         dset, data_dir, args.batch_size, args.image_size, normalisation=args.norm)
 
     # load pretrained model - 
-    model = load_pretrained_model(args.model)
+    model = ResNetBackbone(args.model)
     model = model.to(args.device)
 
     # evaluate model on dataset by fitting logistic regression
