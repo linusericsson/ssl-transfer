@@ -172,6 +172,7 @@ def download_pretrained_models(pretrained_models_path='models'):
 
 
 if __name__ == '__main__':
+    os.makedirs("./models", exist_ok=True)
     print('Warning, SimCLR-v1 and SimCLR-v2 models need to be downloaded manually and converted into PyTorch format. See readme.md for details.')
     # download models from URLs
     download_pretrained_models()
