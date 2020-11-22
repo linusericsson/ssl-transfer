@@ -72,6 +72,11 @@ python many_shot_eval.py --dataset cifar10 --model supervised --C 0.056
 ```
 This model should achieve close to 91.47%.
 
+To search for the best regularisation hyperparameter on the validation set, exclude the `--C` argument:
+```
+python many_shot_eval.py --dataset cifar10 --model supervised
+```
+
 ## Few-shot evaluation
 We provide the code for our few-shot evaluation in `few_shot_eval.py`.
 
