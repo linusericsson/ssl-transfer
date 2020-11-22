@@ -45,6 +45,7 @@ Below are links to the pre-trained weights used.
 
 ## Datasets
 There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository.
+```
 .
 +-- data
 |   +-- CIFAR10
@@ -53,6 +54,7 @@ There are several classes defined in the `datasets` directory. The data is expec
 +-- ssl-transfer
 |   +-- readme.md
 |   +-- ...
+```
 
 ## Many-shot evaluation
 We provide the code for our many-shot evaluation in `many_shot_eval.py`.
