@@ -1,5 +1,5 @@
 # How Well Do Self-Supervised Models Transfer?
-This repository hosts the code for the experiments in the CVPR 2021 submission.
+This repository hosts the code for the experiments in the paper ("How Well Do Self-Supervised Models Transfer?")[].
 
 ## Requirements
 This codebase has been tested with the following package versions:
