@@ -1,5 +1,5 @@
 # How Well Do Self-Supervised Models Transfer?
-This repository hosts the code for the experiments in the paper ["How Well Do Self-Supervised Models Transfer?"](https://arxiv.org/abs/2011.13377).
+This repository hosts the code for the experiments in the paper [How Well Do Self-Supervised Models Transfer?](https://arxiv.org/abs/2011.13377)
 
 ## Requirements
 This codebase has been tested with the following package versions:
