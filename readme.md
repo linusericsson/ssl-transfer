@@ -94,7 +94,7 @@ This model should achieve close to 32.34% ± 0.45%.
 
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
-```
+```bibtex
 @misc{ericsson2020selfsupervised,
       title={How Well Do Self-Supervised Models Transfer?}, 
       author={Linus Ericsson and Henry Gouk and Timothy M. Hospedales},
