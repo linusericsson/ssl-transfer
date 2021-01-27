@@ -1,5 +1,5 @@
 # How Well Do Self-Supervised Models Transfer?
-This repository hosts the code for the experiments in the CVPR 2021 submission.
+This repository hosts the code for the experiments in the paper [How Well Do Self-Supervised Models Transfer?](https://arxiv.org/abs/2011.13377)
 
 ## Requirements
 This codebase has been tested with the following package versions:
@@ -91,3 +91,17 @@ Or, to evaluate the Supervised baseline on ChestX in a 5-way 50-shot setup, run:
 python few_shot_eval.py --dataset chestx --model supervised --n-way 5 --n-support 50
 ```
 This model should achieve close to 32.34% ± 0.45%.
+
+## Citation
+If you find our work useful for your research, please consider citing our paper:
+```bibtex
+@misc{ericsson2020selfsupervised,
+      title={How Well Do Self-Supervised Models Transfer?}, 
+      author={Linus Ericsson and Henry Gouk and Timothy M. Hospedales},
+      year={2020},
+      eprint={2011.13377},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
+```
+If you have any questions, feel welcome to create an issue or contact Linus Ericsson (linus.ericsson@ed.ac.uk).
