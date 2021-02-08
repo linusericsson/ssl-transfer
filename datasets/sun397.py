@@ -24,7 +24,7 @@ def make_dataset(path, root, class_to_idx):
         assert os.path.isfile(line)
         images.append(line)
         for classname in class_to_idx:
-            if classname in line:
+            if f'/{classname}/' in line:
                 labels.append(class_to_idx[classname])
                 break
 
