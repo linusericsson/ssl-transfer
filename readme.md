@@ -92,6 +92,43 @@ python few_shot_eval.py --dataset chestx --model supervised --n-way 5 --n-suppor
 ```
 This model should achieve close to 32.34% ± 0.45%.
 
+## Object detection
+We use the [detectron2](https://github.com/facebookresearch/detectron2) framework to train our models on PASCAL VOC object detection.
+
+Below is an outline of the expected file structure, including config files, converted models and the detectron2 framework:
+```
+detectron2/
+    tools/
+        train_net.py
+        ...
+    ...
+ssl-transfer/
+    detectron2-configs/
+        finetune/
+            byol.yaml
+            ...
+        frozen/
+            byol.yaml
+            ...
+    models/
+        detectron2/
+            byol.pkl
+            ...
+        ...
+    ...
+```
+
+To set it up, perform the following steps:
+1. [Install detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) (We expect the installed framework to be located at the same level as this repository, see outline of expected file structure above).
+2. Convert the models into the format used by detectron2 by running `python convert_to_detectron2.py`. The converted models will be saved in a directory called `detectron2` inside the `models` directory.
+
+We include the config files for the frozen training in `detectron2-configs/frozen` and for full finetuning in `detectron2-configs/finetune`.
+In order to train models, navigate into `detectron2/tools/`. We can now train e.g. BYOL with a frozen backbone on 1 GPU by running:
+```
+./train_net.py --num-gpus 1 --config-file ../../ssl-transfer/detectron2-configs/frozen/byol.yaml OUTPUT_DIR ./output/byol-frozen
+```
+This model should achieve close to 82.01 AP50, the value reported in Table 3 of the paper.
+
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
 ```bibtex

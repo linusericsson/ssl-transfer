@@ -8,6 +8,7 @@ from torchvision import models
 
 
 MODELS = {
+    'supervised': ['', ''],
     'moco-v1': ['https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v1_200ep/moco_v1_200ep_pretrain.pth.tar', 'pth'],
     'moco-v2': ['https://dl.fbaipublicfiles.com/moco/moco_checkpoints/moco_v2_800ep/moco_v2_800ep_pretrain.pth.tar', 'pth'],
     'byol': ['https://storage.googleapis.com/deepmind-byol/checkpoints/pretrain_res50x1.pkl', 'pkl'],
