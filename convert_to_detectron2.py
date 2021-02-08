@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf-8
 # adapted from the conversion code in `detectron2/tools/convert-torchvision-to-d2.py`
 
 import sys, os

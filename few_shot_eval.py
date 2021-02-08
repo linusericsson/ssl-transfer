@@ -14,10 +14,24 @@ from torchvision import models
 import numpy as np
 from tqdm import tqdm
 
+from torchvision import datasets
+
 from datasets import isic
 from datasets import eurosat
 from datasets import cropdiseases
 from datasets import chestx
+
+from datasets import few_shot_dataset
+
+from datasets.dtd import DTD
+from datasets.pets import Pets
+from datasets.cars import Cars
+from datasets.food import Food
+from datasets.sun397 import SUN397
+from datasets.voc2007 import VOC2007
+from datasets.flowers import Flowers
+from datasets.aircraft import Aircraft
+from datasets.caltech101 import Caltech101
 
 
 class FewShotTester():
@@ -182,6 +196,18 @@ FEW_SHOT_DATASETS = {
     'eurosat': [eurosat, '../data/EuroSAT', None, 'accuracy'],
     'isic': [isic, '../data/ISIC', None, 'accuracy'],
     'chestx': [chestx, '../data/ChestX', None, 'accuracy'],
+
+    'aircraft': [Aircraft, '../data/Aircraft', 100, 'accuracy'],
+    'caltech101': [Caltech101, '../data/Caltech101', 102, 'accuracy'],
+    'cars': [Cars, '../data/Cars', 196, 'accuracy'],
+    'cifar10': [datasets.CIFAR10, '../data/CIFAR10', 10, 'accuracy'],
+    'cifar100': [datasets.CIFAR100, '../data/CIFAR100', 100, 'accuracy'],
+    'dtd': [DTD, '../data/DTD', 47, 'accuracy'],
+    'flowers': [Flowers, '../data/Flowers', 102, 'accuracy'],
+    'food': [Food, '../data/Food', 101, 'accuracy'],
+    'pets': [Pets, '../data/Pets', 37, 'accuracy'],
+    'sun397': [None, '../data/SUN397', 397, 'accuracy'],
+    'voc2007': [VOC2007, '../data/VOC2007', 20, 'accuracy'],
 }
 
 
@@ -206,8 +232,12 @@ if __name__ == "__main__":
 
     # load dataset
     dset, data_dir, num_classes, metric = FEW_SHOT_DATASETS[args.dataset]
-    datamgr = dset.SetDataManager(data_dir, args.image_size, n_episode=args.iter_num,
-                                  n_way=args.n_way, n_support=args.n_support, n_query=args.n_query)
+    if args.dataset in ['cropdiseases', 'eurosat', 'isic', 'chestx']:
+        datamgr = dset.SetDataManager(data_dir, args.image_size, n_episode=args.iter_num,
+                                      n_way=args.n_way, n_support=args.n_support, n_query=args.n_query)
+    else:
+        datamgr = few_shot_dataset.SetDataManager(dset, data_dir, num_classes, args.image_size, n_episode=args.iter_num,
+                                      n_way=args.n_way, n_support=args.n_support, n_query=args.n_query)
     dataloader = datamgr.get_data_loader(aug=False, normalise=args.norm)
 
     # load pretrained model
