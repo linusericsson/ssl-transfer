@@ -118,15 +118,11 @@ class ResNetBackbone(nn.Module):
         super().__init__()
         self.model_name = model_name
 
-        if model_name == 'supervised':
-            self.model = models.resnet50(pretrained=True)
-            del self.model.fc
-        else:
-            self.model = models.resnet50(pretrained=False)
-            del self.model.fc
+        self.model = models.resnet50(pretrained=False)
+        del self.model.fc
 
-            state_dict = torch.load(os.path.join('models', self.model_name + '.pth'))
-            self.model.load_state_dict(state_dict)
+        state_dict = torch.load(os.path.join('models', self.model_name + '.pth'))
+        self.model.load_state_dict(state_dict)
 
         self.model.train()
         print("num parameters:", sum(p.numel() for p in self.model.parameters()))
