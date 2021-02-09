@@ -9,6 +9,7 @@ torch=1.2.0
 torchvision=0.4.0
 PIL=7.1.2
 numpy=1.18.1
+scipy=1.2.1
 pandas=1.0.3
 tqdm=4.31.1
 sklearn=0.22.2
@@ -127,7 +128,7 @@ ssl-transfer/
 ```
 
 To set it up, perform the following steps:
-1. [Install detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) (We expect the installed framework to be located at the same level as this repository, see outline of expected file structure above).
+1. [Install detectron2](https://detectron2.readthedocs.io/en/latest/tutorials/install.html) (requries PyTorch 1.5 or newer). We expect the installed framework to be located at the same level as this repository, see outline of expected file structure above.
 2. Convert the models into the format used by detectron2 by running `python convert_to_detectron2.py`. The converted models will be saved in a directory called `detectron2` inside the `models` directory.
 
 We include the config files for the frozen training in `detectron2-configs/frozen` and for full finetuning in `detectron2-configs/finetune`.
