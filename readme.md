@@ -57,38 +57,46 @@ ssl-transfer/
     ...
 ```
 
-## Many-shot evaluation
-We provide the code for our many-shot evaluation in `many_shot_eval.py`.
+## Many-shot linear evaluation
+We provide the code for our linear evaluation in `linear.py`.
 
 To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter, run:
 ```
-python many_shot_eval.py --dataset cifar10 --model deepcluster-v2 --C 0.1
+python linear.py --dataset cifar10 --model deepcluster-v2 --C 0.1
 ```
 The test accuracy should be close to 94.07%, the value reported in Table 1 of the paper.
 
 To evaluate the Supervised baseline, run:
 ```
-python many_shot_eval.py --dataset cifar10 --model supervised --C 0.056
+python linear.py --dataset cifar10 --model supervised --C 0.056
 ```
 This model should achieve close to 91.47%.
 
 To search for the best regularisation hyperparameter on the validation set, exclude the `--C` argument:
 ```
-python many_shot_eval.py --dataset cifar10 --model supervised
+python linear.py --dataset cifar10 --model supervised
+```
+
+## Many-shot finetuning
+We now also provide code for finetuning in `finetune.py`.
+
+To finetune DeepCluster-v2 on CIFAR10, run:
+```
+python finetune.py --dataset cifar10 --model deepcluster-v2
 ```
 
 ## Few-shot evaluation
-We provide the code for our few-shot evaluation in `few_shot_eval.py`.
+We provide the code for our few-shot evaluation in `few_shot.py`.
 
 To evaluate DeepCluster-v2 on EuroSAT in a 5-way 5-shot setup, run:
 ```
-python few_shot_eval.py --dataset eurosat --model deepcluster-v2 --n-way 5 --n-support 5
+python few_shot.py --dataset eurosat --model deepcluster-v2 --n-way 5 --n-support 5
 ```
 The test accuracy should be close to 88.39% ± 0.49%, the value reported in Table 2 of the paper.
 
 Or, to evaluate the Supervised baseline on ChestX in a 5-way 50-shot setup, run:
 ```
-python few_shot_eval.py --dataset chestx --model supervised --n-way 5 --n-support 50
+python few_shot.py --dataset chestx --model supervised --n-way 5 --n-support 50
 ```
 This model should achieve close to 32.34% ± 0.45%.
 
