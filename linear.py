@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import sys, os
+import os
 import argparse
 from pprint import pprint
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
 from torch.utils.data import DataLoader, ConcatDataset
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import datasets, transforms, models
@@ -17,7 +15,6 @@ import PIL
 import numpy as np
 from tqdm import tqdm
 
-from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression as LogReg
 from sklearn.utils._testing import ignore_warnings
 from sklearn.exceptions import ConvergenceWarning
@@ -31,10 +28,10 @@ class LogisticRegression(nn.Module):
         self.metric = metric
         self.clf = LogReg(solver='lbfgs', multi_class='multinomial', warm_start=True)
 
-        print('Logistic regression:', flush=True)
-        print(f'\t solver = L-BFGS', flush=True)
-        print(f"\t classes = {self.num_classes}", flush=True)
-        print(f"\t metric = {self.metric}", flush=True)
+        print('Logistic regression:')
+        print(f'\t solver = L-BFGS')
+        print(f"\t classes = {self.num_classes}")
+        print(f"\t metric = {self.metric}")
 
     def set_params(self, d):
         self.clf.set_params(**d)
@@ -218,15 +215,15 @@ def get_train_valid_loader(dset,
     train_sampler = SubsetRandomSampler(train_idx)
     valid_sampler = SubsetRandomSampler(valid_idx)
 
-    train_loader = torch.utils.data.DataLoader(
+    train_loader = DataLoader(
         train_dataset, batch_size=batch_size, sampler=train_sampler,
         num_workers=num_workers, pin_memory=pin_memory,
     )
-    valid_loader = torch.utils.data.DataLoader(
+    valid_loader = DataLoader(
         valid_dataset, batch_size=batch_size, sampler=valid_sampler,
         num_workers=num_workers, pin_memory=pin_memory,
     )
-    trainval_loader = torch.utils.data.DataLoader(
+    trainval_loader = DataLoader(
         trainval_dataset, batch_size=batch_size,
         num_workers=num_workers, pin_memory=pin_memory,
     )
@@ -275,7 +272,7 @@ def get_test_loader(dset,
 
     dataset = get_dataset(dset, data_dir, 'test', transform)
 
-    data_loader = torch.utils.data.DataLoader(
+    data_loader = DataLoader(
         dataset, batch_size=batch_size, shuffle=shuffle,
         num_workers=num_workers, pin_memory=pin_memory,
     )
@@ -295,14 +292,14 @@ def prepare_data(dset, data_dir, batch_size, image_size, normalisation):
 
 
 # name: {class, root, num_classes, metric}
-MANY_SHOT_DATASETS = {
+LINEAR_DATASETS = {
     'cifar10': [datasets.CIFAR10, '../data/CIFAR10', 10, 'accuracy'],
     'cifar100': [datasets.CIFAR100, '../data/CIFAR100', 100, 'accuracy'],
 }
 
 # Main code
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Evaluate pretrained self-supervised model on many-shot recognition.')
+    parser = argparse.ArgumentParser(description='Evaluate pretrained self-supervised model via logistic regression.')
     parser.add_argument('-m', '--model', type=str, default='deepcluster-v2',
                         help='name of the pretrained model to load and evaluate (deepcluster-v2 | supervised)')
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', help='name of the dataset to evaluate on')
@@ -318,12 +315,11 @@ if __name__ == "__main__":
     pprint(args)
 
     # load dataset - this file only supports CIFAR10/CIFAR100
-    # see eval.py for full range of many-shot and few-shot datasets.
-    dset, data_dir, num_classes, metric = MANY_SHOT_DATASETS[args.dataset]
+    dset, data_dir, num_classes, metric = LINEAR_DATASETS[args.dataset]
     train_loader, val_loader, trainval_loader, test_loader = prepare_data(
         dset, data_dir, args.batch_size, args.image_size, normalisation=args.norm)
 
-    # load pretrained model - 
+    # load pretrained model
     model = ResNetBackbone(args.model)
     model = model.to(args.device)
 
