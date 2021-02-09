@@ -89,7 +89,7 @@ class LoadedResNet(nn.Module):
 
             path = os.path.join('models', f'{self.model_name}.pth')
             print(path)
-            state_dict = torch.load(path)
+            state_dict = torch.load(path, map_location=torch.device('cpu'))
             if 'state_dict' in state_dict:
                 state_dict = state_dict['state_dict']
             elif 'model' in state_dict:
