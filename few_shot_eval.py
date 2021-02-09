@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import sys, os
+import os
 import argparse
 from pprint import pprint
 
@@ -9,12 +9,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from torchvision import models
+from torchvision import models, datasets
 
 import numpy as np
 from tqdm import tqdm
-
-from torchvision import datasets
 
 from datasets import isic
 from datasets import eurosat
@@ -206,7 +204,7 @@ FEW_SHOT_DATASETS = {
     'flowers': [Flowers, '../data/Flowers', 102, 'accuracy'],
     'food': [Food, '../data/Food', 101, 'accuracy'],
     'pets': [Pets, '../data/Pets', 37, 'accuracy'],
-    'sun397': [None, '../data/SUN397', 397, 'accuracy'],
+    'sun397': [SUN397, '../data/SUN397', 397, 'accuracy'],
     'voc2007': [VOC2007, '../data/VOC2007', 20, 'accuracy'],
 }
 
