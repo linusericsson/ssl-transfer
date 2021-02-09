@@ -1,9 +1,11 @@
-_BASE_: "../configs/Base-RCNN-FPN.yaml"
+_BASE_: "../../../detectron2/configs/Base-RCNN-FPN.yaml"
 MODEL:
   WEIGHTS: "../../ssl-transfer/models/detectron2/pcl-v2.pkl"
   PIXEL_MEAN: [123.675, 116.280, 103.530]
   PIXEL_STD: [58.395, 57.120, 57.375]
   MASK_ON: False
+  BACKBONE:
+    FREEZE_AT: 0
   RESNETS:
     DEPTH: 50
     STRIDE_IN_1X1: False

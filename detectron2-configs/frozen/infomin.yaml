@@ -1,4 +1,4 @@
-_BASE_: "../configs/Base-RCNN-FPN.yaml"
+_BASE_: "../../../detectron2/configs/Base-RCNN-FPN.yaml"
 MODEL:
   WEIGHTS: "../../ssl-transfer/models/detectron2/infomin.pkl"
   PIXEL_MEAN: [123.675, 116.280, 103.530]
