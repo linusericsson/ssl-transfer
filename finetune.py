@@ -212,7 +212,7 @@ class FinetuneModel(nn.Module):
 
 class FinetuneTester():
     def __init__(self, model_name, train_loader, val_loader, trainval_loader, test_loader,
-                 metric, device, num_classes, feature_dim=2048, grid=None, steps=20000):
+                 metric, device, num_classes, feature_dim=2048, grid=None, steps=5000):
         self.model_name = model_name
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -501,7 +501,7 @@ FINETUNE_DATASETS = {
 # Main code
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Evaluate pretrained self-supervised model via finetuning.')
-    parser.add_argument('-m', '--model', type=str, default='swav', help='name of the pretrained model to load and evaluate')
+    parser.add_argument('-m', '--model', type=str, default='deepcluster-v2', help='name of the pretrained model to load and evaluate')
     parser.add_argument('-d', '--dataset', type=str, default='cifar10', help='name of the dataset to evaluate on')
     parser.add_argument('-b', '--batch-size', type=int, default=64, help='the size of the mini-batches when inferring features')
     parser.add_argument('-i', '--image-size', type=int, default=224, help='the size of the input images')

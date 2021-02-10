@@ -16,9 +16,47 @@ import numpy as np
 from tqdm import tqdm
 
 from sklearn.linear_model import LogisticRegression as LogReg
+from sklearn.metrics import confusion_matrix, precision_recall_curve
 from sklearn.utils._testing import ignore_warnings
 from sklearn.exceptions import ConvergenceWarning
 
+from datasets.dtd import DTD
+from datasets.pets import Pets
+from datasets.cars import Cars
+from datasets.food import Food
+from datasets.sun397 import SUN397
+from datasets.voc2007 import VOC2007
+from datasets.flowers import Flowers
+from datasets.aircraft import Aircraft
+from datasets.caltech101 import Caltech101
+
+
+def voc_ap(rec, prec):
+    """
+    average precision calculations for PASCAL VOC 2007 metric, 11-recall-point based AP
+    [precision integrated to recall]
+    :param rec: recall
+    :param prec: precision
+    :return: average precision
+    """
+    ap = 0.
+    for t in np.linspace(0, 1, 11):
+        if np.sum(rec >= t) == 0:
+            p = 0
+        else:
+            p = np.max(prec[rec >= t])
+        ap += p / 11.
+    return ap
+
+def voc_eval_cls(y_true, y_pred):
+    # get precision and recall
+    prec, rec, _ = precision_recall_curve(y_true, y_pred)
+    # compute average precision
+    ap = voc_ap(rec, prec)
+    return ap
+
+
+# Testing classes and functions
 
 class LogisticRegression(nn.Module):
     def __init__(self, input_dim, num_classes, metric):
@@ -38,10 +76,36 @@ class LogisticRegression(nn.Module):
 
     @ignore_warnings(category=ConvergenceWarning)
     def fit_logistic_regression(self, X_train, y_train, X_test, y_test):
-        self.clf.fit(X_train, y_train)
-        train_acc = 100. * self.clf.score(X_train, y_train)
-        test_acc = 100. * self.clf.score(X_test, y_test)
-        return test_acc
+        if self.metric == 'accuracy':
+            self.clf.fit(X_train, y_train)
+            test_acc = 100. * self.clf.score(X_test, y_test)
+            return test_acc
+
+        elif self.metric == 'mean per-class accuracy':
+            self.clf.fit(X_train, y_train)
+            pred_test = self.clf.predict(X_test)
+
+            #Get the confusion matrix
+            cm = confusion_matrix(y_test, pred_test)
+            cm = cm.diagonal() / cm.sum(axis=1) 
+            test_score = 100. * cm.mean()
+
+            return test_score
+
+        elif self.metric == 'mAP':
+            aps_test = []
+            for cls in range(self.num_classes):
+                self.clf.fit(X_train, y_train[:, cls])
+                pred_test = self.clf.decision_function(X_test)
+                ap_test = voc_eval_cls(y_test[:, cls], pred_test)
+                aps_test.append(ap_test)
+
+            mAP_test = 100. * np.mean(aps_test)
+
+            return mAP_test
+
+        else:
+            raise Error(f'Metric {self.metric} not implemented')
 
 
 class LinearTester():
@@ -198,35 +262,54 @@ def get_train_valid_loader(dset,
         normalize,
     ])
 
-    # otherwise we select a random subset of the train set to form the validation set
-    train_dataset = get_dataset(dset, data_dir, 'train', transform)
-    valid_dataset = get_dataset(dset, data_dir, 'train', transform)
-    trainval_dataset = get_dataset(dset, data_dir, 'train', transform)
+    if dset in [Aircraft, DTD, Flowers, VOC2007]:
+        # if we have a predefined validation set
+        train_dataset = get_dataset(dset, data_dir, 'train', transform)
+        valid_dataset = get_dataset(dset, data_dir, 'val', transform)
+        trainval_dataset = ConcatDataset([train_dataset, valid_dataset])
 
-    num_train = len(train_dataset)
-    indices = list(range(num_train))
-    split = int(np.floor(valid_size * num_train))
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=shuffle,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
+        valid_loader = DataLoader(
+            valid_dataset, batch_size=batch_size, shuffle=shuffle,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
+        trainval_loader = DataLoader(
+            trainval_dataset, batch_size=batch_size, shuffle=shuffle,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
+    else:
+        # otherwise we select a random subset of the train set to form the validation set
+        train_dataset = get_dataset(dset, data_dir, 'train', transform)
+        valid_dataset = get_dataset(dset, data_dir, 'train', transform)
+        trainval_dataset = get_dataset(dset, data_dir, 'train', transform)
 
-    if shuffle:
-        np.random.seed(random_seed)
-        np.random.shuffle(indices)
+        num_train = len(train_dataset)
+        indices = list(range(num_train))
+        split = int(np.floor(valid_size * num_train))
 
-    train_idx, valid_idx = indices[split:], indices[:split]
-    train_sampler = SubsetRandomSampler(train_idx)
-    valid_sampler = SubsetRandomSampler(valid_idx)
+        if shuffle:
+            np.random.seed(random_seed)
+            np.random.shuffle(indices)
 
-    train_loader = DataLoader(
-        train_dataset, batch_size=batch_size, sampler=train_sampler,
-        num_workers=num_workers, pin_memory=pin_memory,
-    )
-    valid_loader = DataLoader(
-        valid_dataset, batch_size=batch_size, sampler=valid_sampler,
-        num_workers=num_workers, pin_memory=pin_memory,
-    )
-    trainval_loader = DataLoader(
-        trainval_dataset, batch_size=batch_size,
-        num_workers=num_workers, pin_memory=pin_memory,
-    )
+        train_idx, valid_idx = indices[split:], indices[:split]
+        train_sampler = SubsetRandomSampler(train_idx)
+        valid_sampler = SubsetRandomSampler(valid_idx)
+
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, sampler=train_sampler,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
+        valid_loader = DataLoader(
+            valid_dataset, batch_size=batch_size, sampler=valid_sampler,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
+        trainval_loader = DataLoader(
+            trainval_dataset, batch_size=batch_size, shuffle=shuffle,
+            num_workers=num_workers, pin_memory=pin_memory,
+        )
 
     return train_loader, valid_loader, trainval_loader
 
@@ -293,8 +376,17 @@ def prepare_data(dset, data_dir, batch_size, image_size, normalisation):
 
 # name: {class, root, num_classes, metric}
 LINEAR_DATASETS = {
+    'aircraft': [Aircraft, '../data/Aircraft', 100, 'mean per-class accuracy'],
+    'caltech101': [Caltech101, '../data/Caltech101', 102, 'mean per-class accuracy'],
+    'cars': [Cars, '../data/Cars', 196, 'accuracy'],
     'cifar10': [datasets.CIFAR10, '../data/CIFAR10', 10, 'accuracy'],
     'cifar100': [datasets.CIFAR100, '../data/CIFAR100', 100, 'accuracy'],
+    'dtd': [DTD, '../data/DTD', 47, 'accuracy'],
+    'flowers': [Flowers, '../data/Flowers', 102, 'mean per-class accuracy'],
+    'food': [Food, '../data/Food', 101, 'accuracy'],
+    'pets': [Pets, '../data/Pets', 37, 'mean per-class accuracy'],
+    'sun397': [SUN397, '../data/SUN397', 397, 'accuracy'],
+    'voc2007': [VOC2007, '../data/VOC2007', 20, 'mAP'],
 }
 
 # Main code
@@ -314,7 +406,7 @@ if __name__ == "__main__":
     args.norm = not args.no_norm
     pprint(args)
 
-    # load dataset - this file only supports CIFAR10/CIFAR100
+    # load dataset
     dset, data_dir, num_classes, metric = LINEAR_DATASETS[args.dataset]
     train_loader, val_loader, trainval_loader, test_loader = prepare_data(
         dset, data_dir, args.batch_size, args.image_size, normalisation=args.norm)
