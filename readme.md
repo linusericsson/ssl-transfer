@@ -68,7 +68,7 @@ We provide the code for our linear evaluation in `linear.py`.
 
 To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter, run:
 ```
-python linear.py --dataset cifar10 --model deepcluster-v2 --C 0.1
+python linear.py --dataset cifar10 --model deepcluster-v2 --C 0.316
 ```
 The test accuracy should be close to 94.07%, the value reported in Table 1 of the paper.
 
