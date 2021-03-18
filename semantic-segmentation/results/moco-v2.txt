@@ -1,0 +1,204 @@
+[2021-01-25 15:46:08,503 INFO eval_multipro.py line 204 24946] Loaded configuration file selfsupconfig/moco-v2.yaml
+[2021-01-25 15:46:08,504 INFO eval_multipro.py line 205 24946] Running with config:
+DATASET:
+  imgMaxSize: 1000
+  imgSizes: (300, 375, 450, 525, 600)
+  list_train: /raid/hgouk/ADE20K/training.odgt
+  list_val: /raid/hgouk/ADE20K/validation.odgt
+  num_class: 150
+  padding_constant: 32
+  random_flip: True
+  root_dataset: /raid/hgouk/ADE20K/
+  segm_downsampling_rate: 4
+DIR: /raid/hgouk/ADE20K/ckpt/moco-v2
+MODEL:
+  arch_decoder: upernet
+  arch_encoder: resnet50
+  fc_dim: 2048
+  weights_decoder: 
+  weights_encoder: /raid/hgouk/ssl-eval/models/moco-v2.pth
+TEST:
+  batch_size: 1
+  checkpoint: epoch_30.pth
+  result: ./
+TRAIN:
+  batch_size_per_gpu: 2
+  beta1: 0.9
+  deep_sup_scale: 0.4
+  disp_iter: 20
+  epoch_iters: 5000
+  fix_bn: False
+  lr_decoder: 0.02
+  lr_encoder: 0.02
+  lr_pow: 0.9
+  num_epoch: 30
+  optim: SGD
+  seed: 304
+  start_epoch: 0
+  weight_decay: 0.0001
+  workers: 16
+VAL:
+  batch_size: 1
+  checkpoint: epoch_30.pth
+  visualize: False
+gpu:0, start_idx:0, end_idx:1000
+gpu:1, start_idx:1000, end_idx:2000
+# samples: 1000
+Loading weights for net_encoder
+Loading weights for net_decoder
+# samples: 1000
+Loading weights for net_encoder
+Loading weights for net_decoder
+class [0], IoU: 0.4909
+class [1], IoU: 0.6644
+class [2], IoU: 0.6214
+class [3], IoU: 0.7026
+class [4], IoU: 0.5891
+class [5], IoU: 0.7630
+class [6], IoU: 0.6127
+class [7], IoU: 0.7777
+class [8], IoU: 0.4695
+class [9], IoU: 0.5384
+class [10], IoU: 0.4913
+class [11], IoU: 0.4825
+class [12], IoU: 0.6191
+class [13], IoU: 0.2474
+class [14], IoU: 0.2726
+class [15], IoU: 0.4171
+class [16], IoU: 0.3682
+class [17], IoU: 0.3800
+class [18], IoU: 0.5324
+class [19], IoU: 0.4078
+class [20], IoU: 0.6612
+class [21], IoU: 0.3363
+class [22], IoU: 0.3675
+class [23], IoU: 0.4637
+class [24], IoU: 0.2811
+class [25], IoU: 0.3768
+class [26], IoU: 0.3776
+class [27], IoU: 0.4328
+class [28], IoU: 0.3567
+class [29], IoU: 0.2347
+class [30], IoU: 0.2582
+class [31], IoU: 0.3652
+class [32], IoU: 0.2024
+class [33], IoU: 0.2446
+class [34], IoU: 0.2022
+class [35], IoU: 0.4716
+class [36], IoU: 0.4097
+class [37], IoU: 0.4920
+class [38], IoU: 0.2339
+class [39], IoU: 0.3283
+class [40], IoU: 0.0958
+class [41], IoU: 0.0943
+class [42], IoU: 0.3124
+class [43], IoU: 0.1808
+class [44], IoU: 0.3218
+class [45], IoU: 0.1627
+class [46], IoU: 0.1538
+class [47], IoU: 0.4171
+class [48], IoU: 0.5604
+class [49], IoU: 0.5545
+class [50], IoU: 0.4354
+class [51], IoU: 0.3251
+class [52], IoU: 0.0835
+class [53], IoU: 0.2246
+class [54], IoU: 0.5768
+class [55], IoU: 0.2837
+class [56], IoU: 0.8425
+class [57], IoU: 0.3774
+class [58], IoU: 0.3449
+class [59], IoU: 0.2134
+class [60], IoU: 0.0391
+class [61], IoU: 0.0950
+class [62], IoU: 0.2726
+class [63], IoU: 0.1428
+class [64], IoU: 0.4371
+class [65], IoU: 0.6271
+class [66], IoU: 0.2207
+class [67], IoU: 0.3606
+class [68], IoU: 0.0269
+class [69], IoU: 0.3308
+class [70], IoU: 0.3562
+class [71], IoU: 0.4278
+class [72], IoU: 0.1677
+class [73], IoU: 0.2707
+class [74], IoU: 0.3193
+class [75], IoU: 0.3173
+class [76], IoU: 0.1878
+class [77], IoU: 0.2330
+class [78], IoU: 0.1122
+class [79], IoU: 0.2230
+class [80], IoU: 0.3208
+class [81], IoU: 0.3504
+class [82], IoU: 0.3344
+class [83], IoU: 0.0323
+class [84], IoU: 0.4376
+class [85], IoU: 0.5363
+class [86], IoU: 0.0762
+class [87], IoU: 0.0544
+class [88], IoU: 0.2149
+class [89], IoU: 0.4728
+class [90], IoU: 0.2224
+class [91], IoU: 0.0000
+class [92], IoU: 0.1659
+class [93], IoU: 0.0632
+class [94], IoU: 0.0256
+class [95], IoU: 0.0334
+class [96], IoU: 0.0158
+class [97], IoU: 0.1823
+class [98], IoU: 0.0361
+class [99], IoU: 0.3409
+class [100], IoU: 0.0275
+class [101], IoU: 0.0387
+class [102], IoU: 0.1110
+class [103], IoU: 0.2607
+class [104], IoU: 0.0000
+class [105], IoU: 0.3828
+class [106], IoU: 0.0157
+class [107], IoU: 0.3820
+class [108], IoU: 0.1350
+class [109], IoU: 0.2848
+class [110], IoU: 0.1197
+class [111], IoU: 0.1726
+class [112], IoU: 0.1053
+class [113], IoU: 0.5392
+class [114], IoU: 0.3767
+class [115], IoU: 0.0078
+class [116], IoU: 0.1852
+class [117], IoU: 0.5859
+class [118], IoU: 0.1015
+class [119], IoU: 0.0469
+class [120], IoU: 0.3302
+class [121], IoU: 0.0000
+class [122], IoU: 0.0041
+class [123], IoU: 0.1477
+class [124], IoU: 0.3185
+class [125], IoU: 0.1795
+class [126], IoU: 0.2670
+class [127], IoU: 0.2310
+class [128], IoU: 0.0252
+class [129], IoU: 0.2314
+class [130], IoU: 0.5294
+class [131], IoU: 0.0021
+class [132], IoU: 0.0005
+class [133], IoU: 0.3313
+class [134], IoU: 0.2294
+class [135], IoU: 0.1826
+class [136], IoU: 0.0327
+class [137], IoU: 0.0154
+class [138], IoU: 0.1950
+class [139], IoU: 0.3822
+class [140], IoU: 0.0791
+class [141], IoU: 0.0055
+class [142], IoU: 0.2928
+class [143], IoU: 0.4042
+class [144], IoU: 0.0541
+class [145], IoU: 0.0000
+class [146], IoU: 0.2995
+class [147], IoU: 0.0193
+class [148], IoU: 0.0327
+class [149], IoU: 0.0213
+[Eval Summary]:
+Mean IoU: 0.2794, Accuracy: 67.69%
+Evaluation Done!
