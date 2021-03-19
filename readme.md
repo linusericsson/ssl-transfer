@@ -148,6 +148,32 @@ In order to train models, navigate into `detectron2/tools/`. We can now train e.
 ```
 This model should achieve close to 82.01 AP50, the value reported in Table 3 of the paper.
 
+## Surface Normal Estimation
+The code for running the surface normal estimation experiments is given in the `surface-normal-estimation`. We use the [MIT CSAIL Semantic Segmentation Toolkit](), but there is also a docker configuration file that can be used to build a container with all the dependencies installed. One can train a model with a command like:
+
+```
+./scripts/train_finetune_models.sh <pretrained-model-path> <checkpoint-directory>
+```
+
+and the resulting model can be evaluated with
+
+```
+./scripts/test_models.sh <checkpoint-directory>
+```
+
+## Semantic Segmentation
+We also use the same framework performing semantic segmentation. As per the surface normal estimation experiments, we include a docker configuration file to make getting dependencies easier. Before training a semantic segmentation model you will need to change the paths in the relevant YAML configuration file to point to where you have stored the pre-trained models and datasets. Once this is done the training script can be run with, e.g.,
+
+```
+python train.py --gpus 0,1 --cfg selfsupconfig/byol.yaml
+```
+
+where `selfsupconfig/byol.yaml` is the aforementioned configuration file. The resulting model can be evaluated with
+
+```
+python eval_multipro.py --gpus 0,1 --cfg selfsupconfig/byol.yaml
+```
+
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
 ```bibtex
