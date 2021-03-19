@@ -149,7 +149,7 @@ In order to train models, navigate into `detectron2/tools/`. We can now train e.
 This model should achieve close to 82.01 AP50, the value reported in Table 3 of the paper.
 
 ## Surface Normal Estimation
-The code for running the surface normal estimation experiments is given in the `surface-normal-estimation`. We use the [MIT CSAIL Semantic Segmentation Toolkit](), but there is also a docker configuration file that can be used to build a container with all the dependencies installed. One can train a model with a command like:
+The code for running the surface normal estimation experiments is given in the `surface-normal-estimation`. We use the [MIT CSAIL Semantic Segmentation Toolkit](https://github.com/CSAILVision/semantic-segmentation-pytorch), but there is also a docker configuration file that can be used to build a container with all the dependencies installed. One can train a model with a command like:
 
 ```
 ./scripts/train_finetune_models.sh <pretrained-model-path> <checkpoint-directory>
