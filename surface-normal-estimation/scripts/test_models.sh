@@ -7,7 +7,7 @@ DATASET="nyuv2sn40"
 SPLIT="test"
 IMAGE_MODE=${2:-rgb}
 # folder where the checkpoints are stored
-CHECKPOINT_FOLDER="/raid/hgouk/ssl-eval/finetuned/$1/baseline-ptresnet50dilated-ppm-ngpus1-batchSize2-imgMaxSize1000-paddingConst8-segmDownsampleRate8-LR_encoder0.02-LR_decoder0.02-epoch150"
+CHECKPOINT_FOLDER="$1/baseline-ptresnet50dilated-ppm-ngpus1-batchSize2-imgMaxSize1000-paddingConst8-segmDownsampleRate8-LR_encoder0.02-LR_decoder0.02-epoch150"
 
 # single gpu testing
 GPU=0

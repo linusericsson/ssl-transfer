@@ -3,12 +3,12 @@
 MGPU=1
 FILENAME="train_generic.py"
 
-OUTPUT_FOLDER="/raid/hgouk/ssl-eval/finetuned/$1"
+OUTPUT_FOLDER="$2"
 mkdir -p $OUTPUT_FOLDER
-IMAGE_MODE=${2:-rgb}
+IMAGE_MODE=${3:-rgb}
 # path to the pretrained weights
 # PRETRAINED_MODEL="ae_state_dict.pth"
-PRETRAINED_MODEL=/raid/hgouk/ssl-eval/models/$1.pth
+PRETRAINED_MODEL=$1
 # Number of epochs is set to 400 so that the learning rate decay scheme does not need to be modified.
 # The model converges within the first 150 epochs.
 
