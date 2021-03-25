@@ -15,7 +15,7 @@ tqdm=4.31.1
 sklearn=0.22.2
 ```
 
-## Pre-trained models
+## Pre-trained Models
 In the paper we evaluate 14 pre-trained ResNet50 models, 13 self-supervised and 1 supervised.
 To download and prepare all models in the same format, run:
 ```
@@ -63,7 +63,7 @@ ssl-transfer/
     ...
 ```
 
-## Many-shot linear evaluation
+## Many-shot (Linear)
 We provide the code for our linear evaluation in `linear.py`.
 
 To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter, run:
@@ -88,15 +88,15 @@ Finally, when using SimCLR-v1 or SimCLR-v2, use the --no-norm argument:
 python linear.py --dataset cifar10 --model simclr-v1 --no-norm
 ```
 
-## Many-shot finetuning
-We now also provide code for finetuning in `finetune.py`.
+## Many-shot (Finetune)
+We provide code for finetuning in `finetune.py`.
 
 To finetune DeepCluster-v2 on CIFAR10, run:
 ```
 python finetune.py --dataset cifar10 --model deepcluster-v2
 ```
 
-## Few-shot evaluation
+## Few-shot (Kornblith & CD-FSL)
 We provide the code for our few-shot evaluation in `few_shot.py`.
 
 To evaluate DeepCluster-v2 on EuroSAT in a 5-way 5-shot setup, run:
@@ -111,7 +111,7 @@ python few_shot.py --dataset chestx --model supervised --n-way 5 --n-support 50
 ```
 This model should achieve close to 32.34% ± 0.45%.
 
-## Object detection
+## Object Detection
 We use the [detectron2](https://github.com/facebookresearch/detectron2) framework to train our models on PASCAL VOC object detection.
 
 Below is an outline of the expected file structure, including config files, converted models and the detectron2 framework:
