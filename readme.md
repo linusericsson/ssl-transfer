@@ -83,7 +83,7 @@ To search for the best regularisation hyperparameter on the validation set, excl
 python linear.py --dataset cifar10 --model supervised
 ```
 
-Finally, when using SimCLR-v1 or SimCLR-v2, use the --no-norm argument:
+Finally, when using SimCLR-v1 or SimCLR-v2, always use the --no-norm argument:
 ```
 python linear.py --dataset cifar10 --model simclr-v1 --no-norm
 ```
