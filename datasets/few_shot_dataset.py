@@ -5,7 +5,7 @@ import torch
 from PIL import Image
 import numpy as np
 import pandas as pd
-import torchvision.transforms as transforms
+from torchvision import datasets, transforms
 from torch.utils.data import Dataset, ConcatDataset, DataLoader
 from abc import abstractmethod
 
@@ -72,9 +72,14 @@ class SetDataset:
             train_dataset = get_dataset(dset, root, 'train', transform)
             valid_dataset = get_dataset(dset, root, 'val', transform)
             trainval_dataset = ConcatDataset([train_dataset, valid_dataset])
+        if dset in [datasets.CIFAR10, datasets.CIFAR100]:
+            trainval_dataset = get_dataset(dset, root, 'train', identity)
         else:
             trainval_dataset = get_dataset(dset, root, 'train', transform)
-        test_dataset = get_dataset(dset, root, 'test', transform)
+        if dset in [datasets.CIFAR10, datasets.CIFAR100]:
+            test_dataset = get_dataset(dset, root, 'test', identity)
+        else:
+            test_dataset = get_dataset(dset, root, 'test', transform)
         d = ConcatDataset([trainval_dataset, test_dataset])
         print(f'Total dataset size: {len(d)}')
 
@@ -96,7 +101,7 @@ class SetDataset:
                                   num_workers = 0, #use main thread only or may receive multiple batches
                                   pin_memory = False)        
         for cl in self.cl_list:
-            sub_dataset = SubDataset(self.sub_meta[cl], cl, transform=identity)
+            sub_dataset = SubDataset(self.sub_meta[cl], cl, transform=transform if dset in [datasets.CIFAR10, datasets.CIFAR100] else identity)
             self.sub_dataloader.append( torch.utils.data.DataLoader(sub_dataset, **sub_data_loader_params) )
 
     def __getitem__(self, i):

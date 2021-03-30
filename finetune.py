@@ -99,7 +99,7 @@ def voc_eval_cls(y_true, y_pred):
 # Testing classes and functions
 
 class FinetuneModel(nn.Module):
-    def __init__(self, model, num_classes, steps, steps_per_epoch, metric, device, feature_dim):
+    def __init__(self, model, num_classes, steps, metric, device, feature_dim):
         super().__init__()
         self.num_classes = num_classes
         self.steps = steps
@@ -107,13 +107,6 @@ class FinetuneModel(nn.Module):
         self.device = device
         self.model = nn.Sequential(model, nn.Linear(feature_dim, num_classes))
         self.model = self.model.to(self.device)
-        
-        bn_mom = max(1 - (10 / steps_per_epoch), 0.9)
-        for layer in self.model.children():
-            if type(layer) is nn.BatchNorm2d:
-                layer.momentum = bn_mom
-        print("steps_per_epoch:", steps_per_epoch)
-        print('batch norm momentum:', bn_mom)
         self.model.train()
         self.criterion = nn.BCEWithLogitsLoss() if self.metric == 'mAP' else nn.CrossEntropyLoss()
 
@@ -226,8 +219,6 @@ class FinetuneTester():
         self.steps = steps
         self.best_params = {}
 
-        self.steps_per_epoch = len(self.train_loader)
-
     def validate(self):
         best_score = 0
         for i, (lr, wd) in enumerate(grid):
@@ -237,7 +228,7 @@ class FinetuneTester():
             # load pretrained model
             self.model = ResNetBackbone(self.model_name)
             self.model = self.model.to(self.device)
-            self.finetuner = FinetuneModel(self.model, self.num_classes, self.steps, self.steps_per_epoch,
+            self.finetuner = FinetuneModel(self.model, self.num_classes, self.steps,
                                            self.metric, self.device, self.feature_dim)
             val_acc = self.finetuner.tune(self.train_loader, self.val_loader, lr, wd)
             print(f'Finetuned val accuracy {val_acc:.2f}%')
@@ -255,8 +246,7 @@ class FinetuneTester():
         self.model = ResNetBackbone(self.model_name)
         self.model = self.model.to(self.device)
         
-        steps_per_epoch = len(self.trainval_loader)
-        self.finetuner = FinetuneModel(self.model, self.num_classes, self.steps, steps_per_epoch,
+        self.finetuner = FinetuneModel(self.model, self.num_classes, self.steps,
                                        self.metric, self.device, self.feature_dim)
         test_score = self.finetuner.tune(self.trainval_loader, self.test_loader, self.best_params['lr'], self.best_params['wd'])
         print(f'Finetuned test accuracy {test_score:.2f}%')

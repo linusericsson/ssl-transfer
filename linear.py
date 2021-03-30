@@ -20,6 +20,8 @@ from sklearn.metrics import confusion_matrix, precision_recall_curve
 from sklearn.utils._testing import ignore_warnings
 from sklearn.exceptions import ConvergenceWarning
 
+from temperature_scaling import cross_validate_temp_scaling, DummyDataset
+
 from datasets.dtd import DTD
 from datasets.pets import Pets
 from datasets.cars import Cars
@@ -109,13 +111,14 @@ class LogisticRegression(nn.Module):
 
 
 class LinearTester():
-    def __init__(self, model, train_loader, val_loader, trainval_loader, test_loader, metric,
+    def __init__(self, model, train_loader, val_loader, trainval_loader, test_loader, batch_size, metric,
                  device, num_classes, feature_dim=2048, wd_range=None):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.trainval_loader = trainval_loader
         self.test_loader = test_loader
+        self.batch_size = batch_size
         self.metric = metric
         self.device = device
         self.num_classes = num_classes
@@ -129,9 +132,9 @@ class LinearTester():
 
         self.classifier = LogisticRegression(self.feature_dim, self.num_classes, self.metric).to(self.device)
 
-    def get_features(self, train_loader, test_loader, model):
+    def get_features(self, train_loader, test_loader, model, test=True):
         X_train_feature, y_train = self._inference(train_loader, model, 'train')
-        X_test_feature, y_test = self._inference(test_loader, model, 'test')
+        X_test_feature, y_test = self._inference(test_loader, model, 'test' if test else 'val')
         return X_train_feature, y_train, X_test_feature, y_test
 
     def _inference(self, loader, model, split):
@@ -153,7 +156,7 @@ class LinearTester():
 
     def validate(self):
         X_train_feature, y_train, X_val_feature, y_val = self.get_features(
-            self.train_loader, self.val_loader, self.model
+            self.train_loader, self.val_loader, self.model, test=False
         )
         best_score = 0
         for wd in tqdm(self.wd_range, desc='Selecting best hyperparameters'):
@@ -171,7 +174,20 @@ class LinearTester():
             self.trainval_loader, self.test_loader, self.model
         )
         self.classifier.set_params({'C': self.best_params['C']})
-        return self.classifier.fit_logistic_regression(X_trainval_feature, y_trainval, X_test_feature, y_test)
+        test_score = self.classifier.fit_logistic_regression(X_trainval_feature, y_trainval, X_test_feature, y_test)
+
+        orig_model = lambda x: torch.from_numpy(
+            self.classifier.clf.decision_function(x.cpu().numpy())
+        ).to(torch.float32)
+        test_dataset = DummyDataset(X_test_feature, y_test)
+        test_loader = DataLoader(test_dataset, batch_size=self.batch_size, shuffle=True)
+
+        if self.metric != 'mAP':
+            ece, scaled_ece = cross_validate_temp_scaling(orig_model, test_loader, self.batch_size)
+        else:
+            ece, scaled_ece = None, None
+
+        return test_score, ece, scaled_ece, self.best_params['C']
 
 
 class ResNetBackbone(nn.Module):
@@ -185,8 +201,8 @@ class ResNetBackbone(nn.Module):
         state_dict = torch.load(os.path.join('models', self.model_name + '.pth'))
         self.model.load_state_dict(state_dict)
 
-        self.model.train()
-        print("num parameters:", sum(p.numel() for p in self.model.parameters()))
+        self.model.eval()
+        print("Number of model parameters:", sum(p.numel() for p in self.model.parameters()))
 
     def forward(self, x):
         x = self.model.conv1(x)
@@ -416,7 +432,7 @@ if __name__ == "__main__":
     model = model.to(args.device)
 
     # evaluate model on dataset by fitting logistic regression
-    tester = LinearTester(model, train_loader, val_loader, trainval_loader, test_loader,
+    tester = LinearTester(model, train_loader, val_loader, trainval_loader, test_loader, args.batch_size,
                           metric, args.device, num_classes, wd_range=torch.logspace(-6, 5, args.wd_values))
     if args.C is None:
         # tune hyperparameters
@@ -425,5 +441,6 @@ if __name__ == "__main__":
         # use the weight decay value supplied in arguments
         tester.best_params = {'C': args.C}
     # use best hyperparameters to finally evaluate the model
-    test_acc = tester.evaluate()
-    print(f'Final accuracy for {args.model} on {args.dataset}: {test_acc:.2f}%')
+    test_acc, ece, scaled_ece, C = tester.evaluate()
+    print(f'Final accuracy for {args.model} on {args.dataset}: {test_acc:.2f}% using hyperparameter C: {C:.3f}')
+    print(f'ECE: {ece:.3f}, temperature scaled ECE: {scaled_ece:.3f}')

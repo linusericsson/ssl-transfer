@@ -43,7 +43,7 @@ class FewShotTester():
         self.n_query = n_query
         self.iter_num = iter_num
         self.device = device
-        
+
     def test(self):
         loss, acc, std = self.evaluate(self.protonet, self.dataloader, self.n_support, self.n_query, self.iter_num)
         print('Test Acc = %4.2f%% +- %4.2f%%' %(acc, 1.96 * std / np.sqrt(self.iter_num)))
@@ -77,11 +77,12 @@ class FewShotTester():
         if desc is not None:
             data_loader = tqdm(data_loader, desc=desc)
 
-        for data, targets in tqdm(data_loader, desc=f'Few-shot test episodes'):
-            sample = self.extract_episode(data, n_support, n_query)
-            loss_val, acc_val = model.loss(sample)
-            loss_all.append(loss_val.item())
-            acc_all.append(acc_val.item() * 100.)
+        with torch.no_grad():
+            for data, targets in tqdm(data_loader, desc=f'Few-shot test episodes'):
+                sample = self.extract_episode(data, n_support, n_query)
+                loss_val, acc_val = model.loss(sample)
+                loss_all.append(loss_val.item())
+                acc_all.append(acc_val.item() * 100.)
 
         loss = np.mean(loss_all)
         acc = np.mean(acc_all)
