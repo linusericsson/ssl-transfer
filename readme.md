@@ -1,5 +1,5 @@
 # How Well Do Self-Supervised Models Transfer?
-This repository hosts the code for the experiments in the paper [How Well Do Self-Supervised Models Transfer?](https://arxiv.org/abs/2011.13377)
+This repository hosts the code for the experiments in the CVPR 2021 paper [How Well Do Self-Supervised Models Transfer?](https://arxiv.org/abs/2011.13377)
 
 ## Requirements
 This codebase has been tested with the following package versions:
@@ -95,6 +95,7 @@ To finetune DeepCluster-v2 on CIFAR10, run:
 ```
 python finetune.py --dataset cifar10 --model deepcluster-v2
 ```
+This model should achieve close to 97.06%, the value reported in Table 1 of the paper.
 
 ## Few-shot (Kornblith & CD-FSL)
 We provide the code for our few-shot evaluation in `few_shot.py`.
