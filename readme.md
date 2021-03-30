@@ -15,7 +15,7 @@ tqdm=4.31.1
 sklearn=0.22.2
 ```
 
-## Pre-trained models
+## Pre-trained Models
 In the paper we evaluate 14 pre-trained ResNet50 models, 13 self-supervised and 1 supervised.
 To download and prepare all models in the same format, run:
 ```
@@ -63,12 +63,12 @@ ssl-transfer/
     ...
 ```
 
-## Many-shot linear evaluation
+## Many-shot (Linear)
 We provide the code for our linear evaluation in `linear.py`.
 
 To evaluate DeepCluster-v2 on CIFAR10 given our pre-computed best regularisation hyperparameter, run:
 ```
-python linear.py --dataset cifar10 --model deepcluster-v2 --C 0.1
+python linear.py --dataset cifar10 --model deepcluster-v2 --C 0.316
 ```
 The test accuracy should be close to 94.07%, the value reported in Table 1 of the paper.
 
@@ -88,15 +88,15 @@ Finally, when using SimCLR-v1 or SimCLR-v2, use the --no-norm argument:
 python linear.py --dataset cifar10 --model simclr-v1 --no-norm
 ```
 
-## Many-shot finetuning
-We now also provide code for finetuning in `finetune.py`.
+## Many-shot (Finetune)
+We provide code for finetuning in `finetune.py`.
 
 To finetune DeepCluster-v2 on CIFAR10, run:
 ```
 python finetune.py --dataset cifar10 --model deepcluster-v2
 ```
 
-## Few-shot evaluation
+## Few-shot (Kornblith & CD-FSL)
 We provide the code for our few-shot evaluation in `few_shot.py`.
 
 To evaluate DeepCluster-v2 on EuroSAT in a 5-way 5-shot setup, run:
@@ -111,7 +111,7 @@ python few_shot.py --dataset chestx --model supervised --n-way 5 --n-support 50
 ```
 This model should achieve close to 32.34% ± 0.45%.
 
-## Object detection
+## Object Detection
 We use the [detectron2](https://github.com/facebookresearch/detectron2) framework to train our models on PASCAL VOC object detection.
 
 Below is an outline of the expected file structure, including config files, converted models and the detectron2 framework:
@@ -147,6 +147,32 @@ In order to train models, navigate into `detectron2/tools/`. We can now train e.
 ./train_net.py --num-gpus 1 --config-file ../../ssl-transfer/detectron2-configs/frozen/byol.yaml OUTPUT_DIR ./output/byol-frozen
 ```
 This model should achieve close to 82.01 AP50, the value reported in Table 3 of the paper.
+
+## Surface Normal Estimation
+The code for running the surface normal estimation experiments is given in the `surface-normal-estimation`. We use the [MIT CSAIL Semantic Segmentation Toolkit](https://github.com/CSAILVision/semantic-segmentation-pytorch), but there is also a docker configuration file that can be used to build a container with all the dependencies installed. One can train a model with a command like:
+
+```
+./scripts/train_finetune_models.sh <pretrained-model-path> <checkpoint-directory>
+```
+
+and the resulting model can be evaluated with
+
+```
+./scripts/test_models.sh <checkpoint-directory>
+```
+
+## Semantic Segmentation
+We also use the same framework performing semantic segmentation. As per the surface normal estimation experiments, we include a docker configuration file to make getting dependencies easier. Before training a semantic segmentation model you will need to change the paths in the relevant YAML configuration file to point to where you have stored the pre-trained models and datasets. Once this is done the training script can be run with, e.g.,
+
+```
+python train.py --gpus 0,1 --cfg selfsupconfig/byol.yaml
+```
+
+where `selfsupconfig/byol.yaml` is the aforementioned configuration file. The resulting model can be evaluated with
+
+```
+python eval_multipro.py --gpus 0,1 --cfg selfsupconfig/byol.yaml
+```
 
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
