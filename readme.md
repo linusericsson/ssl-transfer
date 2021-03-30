@@ -178,13 +178,13 @@ python eval_multipro.py --gpus 0,1 --cfg selfsupconfig/byol.yaml
 ## Citation
 If you find our work useful for your research, please consider citing our paper:
 ```bibtex
-@misc{ericsson2020selfsupervised,
-      title={How Well Do Self-Supervised Models Transfer?}, 
-      author={Linus Ericsson and Henry Gouk and Timothy M. Hospedales},
-      year={2020},
-      eprint={2011.13377},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@inproceedings{Ericsson2021HowTransfer,
+    title = {{How Well Do Self-Supervised Models Transfer?}},
+    year = {2021},
+    booktitle = {CVPR},
+    author = {Ericsson, Linus and Gouk, Henry and Hospedales, Timothy M.},
+    url = {http://arxiv.org/abs/2011.13377},
+    arxivId = {2011.13377}
 }
 ```
 If you have any questions, feel welcome to create an issue or contact Linus Ericsson (linus.ericsson@ed.ac.uk).
