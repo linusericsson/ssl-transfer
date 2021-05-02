@@ -50,6 +50,23 @@ Below are links to the pre-trained weights used.
 | Supervised | We use weights from `torchvision.models.resnet50(pretrained=True)` |
 
 ## Datasets
+The datasets files (images, labels, splits etc.) can be downloaded from the following links:
+[Aircraft](https://www.robots.ox.ac.uk/~vgg/data/fgvc-aircraft/)
+[Caltech101](http://www.vision.caltech.edu/Image_Datasets/Caltech101/)
+[Cars](https://ai.stanford.edu/~jkrause/cars/car_dataset.html)
+CIFAR10/100 - from torchvision
+[DTD](https://www.robots.ox.ac.uk/~vgg/data/dtd/)
+[Flowers](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html)
+[Food](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/)
+[Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/)
+[SUN397](https://vision.princeton.edu/projects/2010/SUN/)
+[VOC](http://host.robots.ox.ac.uk/pascal/VOC/)
+
+[CropDiseases, EuroSAT, ISIC2018, ChestX](https://github.com/IBM/cdfsl-benchmark)
+
+[NYUv2](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html)
+[ADE20K](https://groups.csail.mit.edu/vision/datasets/ADE20K/)
+
 There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository. Below is an outline of the expected file structure:
 ```
 data/
