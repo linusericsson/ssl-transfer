@@ -72,7 +72,7 @@ class SetDataset:
             train_dataset = get_dataset(dset, root, 'train', transform)
             valid_dataset = get_dataset(dset, root, 'val', transform)
             trainval_dataset = ConcatDataset([train_dataset, valid_dataset])
-        if dset in [datasets.CIFAR10, datasets.CIFAR100]:
+        elif dset in [datasets.CIFAR10, datasets.CIFAR100]:
             trainval_dataset = get_dataset(dset, root, 'train', identity)
         else:
             trainval_dataset = get_dataset(dset, root, 'train', transform)
