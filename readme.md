@@ -66,6 +66,8 @@ The datasets files (images, labels, splits etc.) can be downloaded from the foll
 [NYUv2](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html),
 [ADE20K](https://groups.csail.mit.edu/vision/datasets/ADE20K/)
 
+To use our Caltech101 splits move both the `train.txt` and `test.txt` files found in `caltech101-splits` in to your Caltech101 data location (e.g. `../data/Caltech101/`).
+
 There are several classes defined in the `datasets` directory. The data is expected in a directory name `data`, located on the same level as this repository. Below is an outline of the expected file structure:
 ```
 data/
